@@ -11,13 +11,11 @@ const errorConstants = {
     DATABASE_SEEDING_FAILED: 'Có lỗi xảy ra trong quá trình thêm dữ liệu mẫu.',
     DATABASE_MIGRATION_FAILED: 'Có lỗi xảy ra trong quá trình tạo bảng. Ứng dụng có thể không hoạt động đúng.',
 
+    SIGN_IN_ERROR_TITLE: "Đăng nhập không thành công!",
+    SIGN_IN_FAILED:"Đăng nhập bị lỗi",
+    USER_NOT_FOUND_ERROR_TITLE: 'Lỗi khi tìm người dùng:'
 }
 
-const normalConstants = {
-    SERVER_RUNNING_ON_PORT: 'Server is running on port',
-    SUCCESS: "ok"
-}
-module.exports = {
-    errorConstants,
-    normalConstants
-}
+
+module.exports = 
+    errorConstants

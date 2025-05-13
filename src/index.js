@@ -6,8 +6,8 @@ const seedDatabase = require('./connect/seed');
 const bodyParser = require("body-parser");
 const AuthRouter = require("./router/auth/index")
 const app = express();
-const {errorConstants, normalConstants} = require("./constants/normalContants")
-
+const  normalConstants = require("./constants/normalConstants")
+const  errorConstants = require("./constants/errorConstants")
 require('dotenv').config()
 
 app.use(bodyParser.json({ limit: '50mb' }))
