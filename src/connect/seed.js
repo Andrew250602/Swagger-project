@@ -7,7 +7,7 @@ async function seedDatabase() {
     console.log('Bắt đầu thêm hoặc cập nhật dữ liệu mẫu (có hash mật khẩu)...');
 
     const adminPassword = await bcrypt.hash('admin123', 10);
-    const normalPassword = await bcrypt.hash('user456', 10);
+    const normalPassword = await bcrypt.hash('Abcd1234', 10);
 
     // Thêm hoặc cập nhật dữ liệu vào bảng TBL_BASE_MENUS
     await client.query(`
@@ -52,8 +52,8 @@ async function seedDatabase() {
     await client.query(`
       INSERT INTO TBL_BASE_USERS (ID, CODE, LC_CODE, NAME, NAME_GROUP, ACTIVE, CREATED_BY, UPDATED_BY, VERSION, CREATED_TIME, UPDATED_TIME, PASS_WORD)
       VALUES
-          (1, 'USER_001', 'en', 'Admin User', NULL, 1, 'admin', 'admin', 1, NOW(), NOW(), $1),
-          (2, 'USER_002', 'en', 'Normal User', NULL, 1, 'user', 'user', 1, NOW(), NOW(), $2)
+          (1, 'USER_001', 'en', 'AdminUser', NULL, 1, 'admin', 'admin', 1, NOW(), NOW(), $1),
+          (2, 'USER_002', 'en', 'NormalUser', NULL, 1, 'user', 'user', 1, NOW(), NOW(), $2)
       ON CONFLICT (ID, CODE, LC_CODE) DO UPDATE SET
         NAME = EXCLUDED.NAME,
         NAME_GROUP = EXCLUDED.NAME_GROUP,
@@ -124,24 +124,24 @@ async function seedDatabase() {
     console.log('Dữ liệu mẫu cho bảng TBL_BASE_ROLE_PERMISSION đã được thêm hoặc cập nhật.');
 
     // Thêm hoặc cập nhật dữ liệu vào bảng TBL_BASE_REFRESH_TOKEN
-    await client.query(`
-      INSERT INTO TBL_BASE_REFRESH_TOKEN (ID, CODE, LC_CODE, NAME, NAME_GROUP, ACTIVE, CREATED_BY, UPDATED_BY, VERSION, CREATED_TIME, UPDATED_TIME, ACCESS_TOKEN, REFRESH_TOKEN, EXPIRATION, USER_CODE)
-      VALUES
-          (1, 'REFRESH_001', 'en', 'Admin Token', NULL, 1, 'admin', 'admin', 1, NOW(), NOW(), 'access_token_admin', 'refresh_token_admin', NOW() + INTERVAL '1 day', 'USER_001'),
-          (2, 'REFRESH_002', 'en', 'User Token', NULL, 1, 'user', 'user', 1, NOW(), NOW(), 'access_token_user', 'refresh_token_user', NOW() + INTERVAL '1 day', 'USER_002')
-      ON CONFLICT (ID, CODE, LC_CODE) DO UPDATE SET
-        NAME = EXCLUDED.NAME,
-        NAME_GROUP = EXCLUDED.NAME_GROUP,
-        ACTIVE = EXCLUDED.ACTIVE,
-        UPDATED_BY = EXCLUDED.UPDATED_BY,
-        VERSION = EXCLUDED.VERSION + 1,
-        UPDATED_TIME = NOW(),
-        ACCESS_TOKEN = EXCLUDED.ACCESS_TOKEN,
-        REFRESH_TOKEN = EXCLUDED.REFRESH_TOKEN,
-        EXPIRATION = EXCLUDED.EXPIRATION,
-        USER_CODE = EXCLUDED.USER_CODE;
-    `);
-    console.log('Dữ liệu mẫu cho bảng TBL_BASE_REFRESH_TOKEN đã được thêm hoặc cập nhật.');
+    // await client.query(`
+    //   INSERT INTO TBL_BASE_REFRESH_TOKEN (ID, CODE, LC_CODE, NAME, NAME_GROUP, ACTIVE, CREATED_BY, UPDATED_BY, VERSION, CREATED_TIME, UPDATED_TIME, ACCESS_TOKEN, REFRESH_TOKEN, EXPIRATION, USER_CODE)
+    //   VALUES
+    //       (1, 'REFRESH_001', 'en', 'Admin Token', NULL, 1, 'admin', 'admin', 1, NOW(), NOW(), 'access_token_admin', 'refresh_token_admin', NOW() + INTERVAL '1 day', 'USER_001'),
+    //       (2, 'REFRESH_002', 'en', 'User Token', NULL, 1, 'user', 'user', 1, NOW(), NOW(), 'access_token_user', 'refresh_token_user', NOW() + INTERVAL '1 day', 'USER_002')
+    //   ON CONFLICT (ID, CODE, LC_CODE) DO UPDATE SET
+    //     NAME = EXCLUDED.NAME,
+    //     NAME_GROUP = EXCLUDED.NAME_GROUP,
+    //     ACTIVE = EXCLUDED.ACTIVE,
+    //     UPDATED_BY = EXCLUDED.UPDATED_BY,
+    //     VERSION = EXCLUDED.VERSION + 1,
+    //     UPDATED_TIME = NOW(),
+    //     ACCESS_TOKEN = EXCLUDED.ACCESS_TOKEN,
+    //     REFRESH_TOKEN = EXCLUDED.REFRESH_TOKEN,
+    //     EXPIRATION = EXCLUDED.EXPIRATION,
+    //     USER_CODE = EXCLUDED.USER_CODE;
+    // `);
+    // console.log('Dữ liệu mẫu cho bảng TBL_BASE_REFRESH_TOKEN đã được thêm hoặc cập nhật.');
 
     // Thêm hoặc cập nhật dữ liệu vào bảng TBL_BASE_USER_LOG
     await client.query(`

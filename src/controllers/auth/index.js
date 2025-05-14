@@ -1,11 +1,15 @@
-const UserRepository = require("../../repo/auth/index")
+const UserRepository = require("../../repo/base/auth/index")
 const bcrypt = require("bcrypt")
 const protocolConstants = require("../../constants/protocalConstant")
 const errorConstants = require("../../constants/errorConstants");
 const normalConstants = require("../../constants/normalConstants")
 const UserResponseDTO = require("../../common/dto/res/userResponseDTO")
-
+const RefreshTokenRepository = require("../../repo/base/refreshToken/index")
+const MenuRepository = require("../../repo/base/menu/index")
+const refreshTokenRepository = new RefreshTokenRepository();
+const menuRopository = new MenuRepository();
 class UserController {
+
   async createUser(req, res) {
     try {
       const { code, lcCode, name, passWord } = req.body;
@@ -43,14 +47,21 @@ class UserController {
       if (!user) {
         return res.status(protocolConstants.UNAUTHORIZED).json({ error: errorConstants.USER_IS_NOT_EXISTED });
       }
-
-      const isPasswordMatch = await bcrypt.compare(passWord, user.pass_word);
+      const isPasswordMatch = await bcrypt.compare(passWord, user.password);
 
       if (!isPasswordMatch) {
         return res.status(protocolConstants.UNAUTHORIZED).json({ error: errorConstants.INVALID_CREDENTIALS });
       }
 
+
+      const generateToken = await refreshTokenRepository.generateToken(user);
+      const foundMenu = await menuRopository.foundMenu(user)
+
       const userResponse = new UserResponseDTO(user);
+      userResponse.accessToken = generateToken
+      userResponse.menu = foundMenu
+
+      await refreshTokenRepository.saveToken(user);
       return res.status(protocolConstants.SUCCESS).json({ message: normalConstants.SIGN_IN_SUCCESS, user: userResponse });
 
     } catch (error) {
@@ -58,6 +69,6 @@ class UserController {
       return res.status(protocolConstants.INTERNAL_SERVER_ERROR).json({ error: errorConstants.SIGN_IN_FAILED });
     }
   }
-
+  
 }
 module.exports = new UserController()
