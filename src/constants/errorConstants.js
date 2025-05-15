@@ -20,6 +20,14 @@ const errorConstants = {
 
     UNAUTHORIZED_TOKEN_MISSING: 'Unauthorized: Token không được cung cấp.',
     FORBIDDEN_INVALID_TOKEN: 'Forbidden: Token không hợp lệ.',
+
+    DELETE_USER_ERROR_LOG: 'Error deleting user:',
+    DELETE_USER_FAILED_MESSAGE: 'Failed to delete user',
+    DELETE_USER_GENERIC_ERROR: 'Error deleting user: Failed to delete user',
+    REFRESH_TOKEN_NOT_FOUND_ERROR_TITLE: 'Refresh token not found',
+    TOKEN_VALID: 'Token is valid.',
+    TOKEN_INVALID: 'Token is invalid or expired.',
+    ERROR_REMOVING_REFRESH_TOKEN: 'Error when removing refresh token:',
 }
 
 

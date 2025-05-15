@@ -16,8 +16,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({ origin: "*" }));
 
-
-
 app.listen(process.env.DB_PORT_DB, async () => {
   console.log(`🚀 ${normalConstants.SERVER_RUNNING_ON_PORT} http://${process.env.DB_HOST}:${process.env.DB_PORT_DB}`);
   console.log(`🚀🚀 ${normalConstants.SWAGGER_UI} http://${process.env.DB_HOST}:${process.env.DB_PORT_DB}/api-docs`);
@@ -72,10 +70,9 @@ const options = {
 };
 const swaggerSpec = swaggerJsdoc(options);
 
-
 // router
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/auth", AuthRouter)
+app.use('/api/auth', AuthRouter)
 app.use(authenticateToken)
 
 app.get("/some-protected-route", (req, res) => {

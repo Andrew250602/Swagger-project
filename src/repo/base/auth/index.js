@@ -2,8 +2,9 @@ const pool = require('../../../connect/index');
 // const User = require("../../models/base/auth/userEntity")
 const UserResponseDTO = require("../../../common/dto/res/userResponseDTO")
 const errorConstants = require("../../../constants/errorConstants")
+const normalConstants = require("../../../constants/normalConstants")
 class UserRepository {
-  async createUser(data) {
+  async create(data) {
     const { code, lcCode, name, passWord } = data;
     try {
       const client = await pool.connect();
@@ -18,6 +19,30 @@ class UserRepository {
         return new UserResponseDTO(user);
       }
       return null;
+    } catch (error) {
+      console.error(errorConstants.CREATE_USER_DB_ERROR, error);
+      throw error;
+    }
+  }
+  async update(data) {
+    try {
+      const client = await pool.connect();
+      const result = await client.query(
+        `
+        UPDATE TBL_BASE_USERS
+        SET code = $1,
+            name = $2,
+            pass_word = $3
+        WHERE code = $1
+        `,
+        [data.code, data.name, data.passWord]
+      );
+      client.release();
+      if (result.rows.length > 0) {
+        const user = result.rows;
+        return new UserResponseDTO(user);
+      }
+      return normalConstants.UPDATE_SUCCESS;
     } catch (error) {
       console.error(errorConstants.CREATE_USER_DB_ERROR, error);
       throw error;
@@ -73,12 +98,26 @@ class UserRepository {
       if (result.rows.length > 0) {
         return result.rows[0];
       }
-      return null;
+      return null
     } catch (error) {
       console.error(errorConstants.USER_NOT_FOUND_ERROR_TITLE, error);
       throw error;
     }
   }
+  async delete(data) {
+     try {
+    const client = await pool.connect();
+    const result = await client.query(`
+      DELETE FROM TBL_BASE_USERS
+      WHERE code = $1
+    `, [data.code]);
+    client.release();
+    return result.rowCount;
+  } catch (error) {
+    console.error(errorConstants.USER_NOT_FOUND_ERROR_TITLE, error);
+    throw error;
+  }
+  }
 }
 
-module.exports = new UserRepository();
+module.exports = new UserRepository();;

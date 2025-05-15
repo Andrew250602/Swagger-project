@@ -4,9 +4,11 @@ class UserResponseDTO {
         this.code = data.code
         this.accessToken = data.accessToken
         this.lcCode = data.lcCode,
-            this.menu = data.menu
+        this.menu = data.menu,
+        this.refreshToken = data.refreshToken
     }
     accessToken;
     menu;
+    refreshToken;
 }
 module.exports = UserResponseDTO;

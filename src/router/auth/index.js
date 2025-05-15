@@ -27,7 +27,7 @@ const UserController = require("../../controllers/auth/index")
  *       401:
  *         description: Unauthorized
  */
-router.post("/create", UserController.createUser);
+router.post("/create", UserController.createOrUpdate);
 /**
  * @swagger
  * /api/auth/signIn:
@@ -53,6 +53,57 @@ router.post("/create", UserController.createUser);
  *         description: Invalid input
  */
 
-router.post("/signIn", UserController.signInUser);
-
+router.post("/signIn", UserController.signIn);
+/**
+ * @swagger
+ * /api/auth/signOut:
+ *   post:
+ *     summary: Đăng xuất người dùng
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User signed out successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/signOut", UserController.signOut);
+/**
+ * @swagger
+ * /api/auth/delete:
+ *   post:
+ *     summary: Xóa người dùng
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               code:
+ *                 type: string
+ *             required:
+ *               - code
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ *       400:
+ *         description: Invalid input
+ */
+router.post("/delete", UserController.delete);
+router.post("/startRefreshToken", UserController.checkAccessToken);
+router.post("/endRefreshToken", UserController.checkRefreshToken);
 module.exports = router;

@@ -43,4 +43,4 @@ class MenuRepository {
     }
 }
 
-module.exports = MenuRepository;
+module.exports = new MenuRepository;
