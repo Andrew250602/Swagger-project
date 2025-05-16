@@ -7,7 +7,7 @@ const secretKey = process.env.JWT_SECRET_KEY
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    if (req.path.startsWith('/api/auth/')) {
+    if (req.path.startsWith('/api/auth/') || req.path.startsWith('/api-docs')) {
         return next();
     }
     if (token == null) {

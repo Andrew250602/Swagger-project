@@ -7,7 +7,7 @@ require('dotenv').config();
 class RefreshTokenRepository {
     async generateToken(user) {
         const payload = { name: user.name };
-        const expiration = '30s';
+        const expiration = '1d';
         const secret = process.env.JWT_SECRET_KEY;
 
         const refreshToken = jwt.sign(payload, secret, { expiresIn: expiration });
@@ -52,7 +52,7 @@ class RefreshTokenRepository {
             return result.rowCount > 0;
 
         } catch (error) {
-            console.error('Lỗi khi update token:', error);
+            console.error(errorConstants.UPDATE_TOKEN_ERROR_TITLE, error);
             return false;
         }
     }

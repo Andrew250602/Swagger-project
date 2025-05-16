@@ -6,14 +6,14 @@ const normalConstants = require("../../constants/normalConstants")
 const UserResponseDTO = require("../../common/dto/res/userResponseDTO")
 const RefreshTokenRepository = require("../../repo/base/refreshToken/index")
 const MenuRepository = require("../../repo/base/menu/index")
-
-class UserController {
+// const UserRoleRepository = require("../../repo/base/userRole/index")
+class AuthorController {
 
   async createOrUpdate(req, res) {
     try {
-      const { code, lcCode, name, passWord } = req.body;
+      const { name, passWord } = req.body;
 
-      if (!code || !lcCode || !name || !passWord) {
+      if (!name || !passWord) {
         return res.status(protocolConstants.BAD_REQUEST).json({ error: errorConstants.MISSING_REQUIRED_FIELDS });
       }
 
@@ -21,7 +21,7 @@ class UserController {
       let newUser = "";
       const hashedPassword = await bcrypt.hash(passWord, 10);
       if (!isExistedUser) {
-        newUser = await UserRepository.create({ code, lcCode, name, passWord: hashedPassword });
+        newUser = await UserRepository.create({ name, passWord: hashedPassword });
       } else {
         req.body.passWord = hashedPassword;
         req.body.code = isExistedUser.code
@@ -43,7 +43,6 @@ class UserController {
       }
 
       const user = await UserRepository.isReturnUser(name);
-
       if (!user) {
         return res.status(protocolConstants.UNAUTHORIZED).json({ error: errorConstants.USER_IS_NOT_EXISTED });
       }
@@ -85,19 +84,19 @@ class UserController {
         return res.status(protocolConstants.UNAUTHORIZED).json({ error: errorConstants.USER_IS_NOT_EXISTED });
       }
       await RefreshTokenRepository.removeToken(user);
-      return res.status(200).json({ user: user })
+      return res.status(protocolConstants.SUCCESS).json({ user: user })
     }
     catch (error) {
-      return res.status(404).json({ error: "not found" })
+      return res.status(protocolConstants.NOT_FOUND).json({ error: "not found" })
     }
   }
   async delete(req, res) {
     try {
       const user = await UserRepository.delete(req.body)
-      return res.status(200).json({ user: user })
+      return res.status(protocolConstants.SUCCESS).json({ user: user })
     }
     catch (error) {
-      return res.status(404).json({ error: errorConstants.DELETE_USER_FAILED_MESSAGE })
+      return res.status(protocolConstants.NOT_FOUND).json({ error: errorConstants.DELETE_USER_FAILED_MESSAGE })
     }
   }
 
@@ -124,11 +123,11 @@ class UserController {
           }
         }
       }
-      return res.status(200).json({ user: user })
+      return res.status(protocolConstants.SUCCESS).json({ user: user })
     }
     catch (error) {
       console.error(error);
-      return res.status(404).json({ error: errorConstants.REFRESH_TOKEN_NOT_FOUND_ERROR_TITLE })
+      return res.status(protocolConstants.NOT_FOUND).json({ error: errorConstants.REFRESH_TOKEN_NOT_FOUND_ERROR_TITLE })
     }
   }
 
@@ -138,17 +137,17 @@ class UserController {
       const request = {
         usercode: findToken.code
       }
-      console.log(findToken)
       const user = await RefreshTokenRepository.checkTokenEndExpiration(findToken)
       if (!user.valid) {
         await RefreshTokenRepository.removeToken(request);
       }
-      return res.status(200).json({ user: user })
+      return res.status(protocolConstants.SUCCESS).json({ user: user })
     }
     catch (error) {
       console.error(error);
-      return res.status(404).json({ error: errorConstants.REFRESH_TOKEN_NOT_FOUND_ERROR_TITLE })
+      return res.status(protocolConstants.NOT_FOUND).json({ error: errorConstants.REFRESH_TOKEN_NOT_FOUND_ERROR_TITLE })
     }
   }
+
 }
-module.exports = new UserController()
+module.exports = new AuthorController()

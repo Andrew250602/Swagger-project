@@ -5,7 +5,10 @@ const swaggerJsdoc = require('swagger-jsdoc');
 
 const createTables = require('./connect/migration');
 const seedDatabase = require('./connect/seed');
+
 const AuthRouter = require("./router/auth")
+const UserRouter = require("./router/user")
+
 const normalConstants = require("./constants/normalConstants")
 const errorConstants = require("./constants/errorConstants")
 const authenticateToken = require("./middleWare/index")
@@ -71,10 +74,8 @@ const options = {
 const swaggerSpec = swaggerJsdoc(options);
 
 // router
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/api/auth', AuthRouter)
 app.use(authenticateToken)
 
-app.get("/some-protected-route", (req, res) => {
-    res.send("This is a protected route!");
-});
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/auth', AuthRouter)
+app.use('/api/user', UserRouter)

@@ -3,15 +3,25 @@ const pool = require('../../../connect/index');
 const UserResponseDTO = require("../../../common/dto/res/userResponseDTO")
 const errorConstants = require("../../../constants/errorConstants")
 const normalConstants = require("../../../constants/normalConstants")
+const generateCode = require("../../../until/index")
 class UserRepository {
   async create(data) {
-    const { code, lcCode, name, passWord } = data;
+    const { name, passWord } = data;
     try {
       const client = await pool.connect();
+      const count = await client.query(`
+        SELECT COUNT(ID) FROM TBL_BASE_USERS`)
+      let baseCode = "code";
+      let increment = 0;
+      if (count.rowCount < 100) {
+        increment = count.rowCount + 1
+      }
+      let codeValue = generateCode(baseCode, increment);
+      let lcCodeValue = "lc_Code"
       const result = await client.query(
         `INSERT INTO TBL_BASE_USERS (CODE, LC_CODE, NAME, PASS_WORD, ACTIVE, CREATED_BY, UPDATED_BY, CREATED_TIME, UPDATED_TIME) 
         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING *`,
-        [code, lcCode, name, passWord, 1, 'system', 'system']
+        [codeValue, lcCodeValue, name, passWord, 1, 'system', 'system']
       );
       client.release();
       if (result.rows.length > 0) {
@@ -50,19 +60,14 @@ class UserRepository {
   }
   async isExistedUser(data) {
     try {
-      const { code, lcCode, name } = data;
+      const { name } = data;
       const client = await pool.connect();
       let query = `SELECT COUNT(u.id) 
-      FROM TBL_BASE_USERS u WHERE u.code = $1`;
-      const values = [code];
-
-      query += ' AND u.lc_code = $2';
-      values.push(lcCode);
-
+      FROM TBL_BASE_USERS u WHERE`;
       if (name) {
-        query += ' AND u.name = $3';
-        values.push(name);
+        query += ' u.name = $1';
       }
+      const values = [name];
 
       const result = await client.query(query, values);
       client.release();
@@ -105,19 +110,47 @@ class UserRepository {
     }
   }
   async delete(data) {
-     try {
-    const client = await pool.connect();
-    const result = await client.query(`
+    try {
+      const client = await pool.connect();
+      const result = await client.query(`
       DELETE FROM TBL_BASE_USERS
       WHERE code = $1
     `, [data.code]);
-    client.release();
-    return result.rowCount;
-  } catch (error) {
-    console.error(errorConstants.USER_NOT_FOUND_ERROR_TITLE, error);
-    throw error;
+      client.release();
+      return result.rowCount;
+    } catch (error) {
+      console.error(errorConstants.USER_NOT_FOUND_ERROR_TITLE, error);
+      throw error;
+    }
   }
+  async deleteAll() {
+
+    try {
+      const client = await pool.connect()
+      await client.query(`
+            DROP TABLE IF EXISTS TBL_BASE_USERS
+            `)
+      client.release();
+      return true
+    } catch (error) {
+      console.error(errorConstants.USER_NOT_FOUND_ERROR_TITLE, error);
+      throw error;
+    }
+  }
+
+  async getAll() {
+    try {
+      const client = await pool.connect();
+      const result = await client.query(`
+        SELECT * FROM TBL_BASE_USERS
+        `);
+      client.release();
+      return result.rows;
+    } catch (error) {
+      console.error(errorConstants.USER_NOT_FOUND_ERROR_TITLE, error);
+      throw error
+    }
   }
 }
 
-module.exports = new UserRepository();;
+module.exports = new UserRepository();

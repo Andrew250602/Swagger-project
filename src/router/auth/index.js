@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const UserController = require("../../controllers/auth/index")
+const AuthorController = require("../../controllers/auth/index")
 
 /**
  * @swagger
@@ -27,7 +27,7 @@ const UserController = require("../../controllers/auth/index")
  *       401:
  *         description: Unauthorized
  */
-router.post("/create", UserController.createOrUpdate);
+router.post("/create", AuthorController.createOrUpdate);
 /**
  * @swagger
  * /api/auth/signIn:
@@ -53,7 +53,7 @@ router.post("/create", UserController.createOrUpdate);
  *         description: Invalid input
  */
 
-router.post("/signIn", UserController.signIn);
+router.post("/signIn", AuthorController.signIn);
 /**
  * @swagger
  * /api/auth/signOut:
@@ -76,7 +76,7 @@ router.post("/signIn", UserController.signIn);
  *       401:
  *         description: Unauthorized
  */
-router.post("/signOut", UserController.signOut);
+router.post("/signOut", AuthorController.signOut);
 /**
  * @swagger
  * /api/auth/delete:
@@ -103,7 +103,7 @@ router.post("/signOut", UserController.signOut);
  *       400:
  *         description: Invalid input
  */
-router.post("/delete", UserController.delete);
-router.post("/startRefreshToken", UserController.checkAccessToken);
-router.post("/endRefreshToken", UserController.checkRefreshToken);
+router.post("/delete", AuthorController.delete);
+router.post("/startRefreshToken", AuthorController.checkAccessToken);
+router.post("/endRefreshToken", AuthorController.checkRefreshToken);
 module.exports = router;
