@@ -151,6 +151,21 @@ class UserRepository {
       throw error
     }
   }
+  async permissionUser(data) {
+    try {
+      const client = await pool.connect();
+      await client.query(`
+      INSERT INTO TBL_BASE_USER_ROLE (ID, CODE, LC_CODE, NAME, ACTIVE, CREATED_BY, UPDATED_BY, VERSION, CREATED_TIME, UPDATED_TIME, ROLE_ID, USER_ID)
+      VALUES (1, 'USER_ROLE_001', 'en', '', 1, 'admin', 'admin', 1, NOW(), NOW(), $1, $2)
+        `, [data.roleId, data.userId]);
+      client.release();
+      return true
+    }
+    catch (error) {
+      console.error(errorConstants.USER_NOT_FOUND_ERROR_TITLE, error);
+      return false
+    }
+  }
 }
 
 module.exports = new UserRepository();

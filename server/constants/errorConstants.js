@@ -38,6 +38,8 @@ const errorConstants = {
     NO_USERS_FOUND: "Không tìm thấy người dùng để xóa.",
     GET_ALL_USERS_ERROR: "Lỗi xảy ra khi cố gắng lấy tất cả người dùng.",
     UPDATE_TOKEN_ERROR_TITLE: 'Lỗi khi update token:',
+    NOT_FOUND: 'Không tìm thấy. ',
+    PERMISSION_USER_FAILED: 'Phân quyền người dùng bị lỗi. '
 
 }
 const errorConstantsEn = {

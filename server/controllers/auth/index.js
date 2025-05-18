@@ -87,7 +87,7 @@ class AuthorController {
       return res.status(protocolConstants.SUCCESS).json({ user: user })
     }
     catch (error) {
-      return res.status(protocolConstants.NOT_FOUND).json({ error: "not found" })
+      return res.status(protocolConstants.NOT_FOUND).json({ error: errorConstants.NOT_FOUND })
     }
   }
   async delete(req, res) {
