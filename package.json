@@ -1,4 +1,12 @@
 {
+  "name": "your-project-name",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"nodemon server/index.js\" \"react-scripts start\"",
+    "dev": "concurrently \"nodemon server/index.js\" \"react-scripts start\"",
+    "build": "cd src && npm run build",
+    "test": "jest"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "concurrently": "^9.1.2",
@@ -19,12 +27,6 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
-  "scripts": {
-    "start": "concurrently \"nodemon server/index.js\" \"react-scripts start\"",
-    "dev": "concurrently \"nodemon server/index.js\" \"react-scripts start\"",
-    "build": "cd src && npm start"
-    "test": "jest"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -37,5 +39,5 @@
       "last 1 safari version"
     ]
   },
-  "main":"server/index.js"
+  "main": "server/index.js"
 }
