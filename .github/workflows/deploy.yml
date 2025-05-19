@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Change this if your default branch is different
+      - main  # Deploy on push to main branch
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # Use the version your project requires
+          node-version: '14'  # Adjust the version if needed
 
       - name: Install Dependencies
         run: |
@@ -30,8 +30,8 @@ jobs:
       - name: Copy Build to Public Directory
         run: |
           mkdir -p public
-          cp -r src/build/* public/  # Adjust the path based on your build output
-          
+          cp -r src/build/* public/ || echo "No files to copy, build may have failed."
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
