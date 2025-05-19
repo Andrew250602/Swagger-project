@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Backend Tests
         working-directory: server
-        run: npx nodemon server/index.js
+        run: npm test
 
   # Job cho Frontend
   build-frontend:
@@ -51,7 +51,7 @@ jobs:
 
       - name: Build Frontend
         working-directory: src
-        run: react-scripts start
+        run: npm run build
 
   # Job Deploy (nếu cần)
   deploy:
