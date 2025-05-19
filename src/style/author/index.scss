@@ -1,0 +1,138 @@
+$background-color: #30193d; /* Màu tím than */
+$input-background: #483d8b; /* Màu tím đậm hơn cho input */
+$text-color: #ffffff; /* Màu trắng */
+$placeholder-color: #a9a9a9; /* Màu xám nhạt cho placeholder */
+$primary-color: #afeeee; /* Màu xanh dương nhạt cho nút */
+$secondary-color: #ff69b4; /* Màu hồng */
+$border-radius: 10px; /* Đường cong mềm mại hơn */
+$collapsed-height: 60px; /* Chiều cao khi chỉ hiển thị LOGIN */
+$expanded-height: 320px; /* Chiều cao khi form mở rộng */
+$transition-duration: 0.4s; /* Thời gian chuyển tiếp */
+$transition-easing: ease-in-out;
+
+body {
+    background-color: #000; /* Nền tối */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Chiều cao tối thiểu */
+}
+
+.login-wrapper {
+    background-color: $background-color;
+    border-radius: $border-radius;
+    overflow: hidden; /* Ẩn phần form bị tràn khi thu gọn */
+    height: $collapsed-height;
+    width: 320px; /* Giữ nguyên chiều rộng */
+    transition: height $transition-duration $transition-easing;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Bóng đổ rõ hơn */
+
+    &:hover {
+        height: $expanded-height; /* Tăng chiều cao khi hover */
+    }
+}
+
+.login-header {
+    padding: 15px;
+    text-align: center;
+
+    h2 {
+        color: $text-color;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em; /* Tăng kích thước chữ */
+        font-weight: bold;
+
+        span {
+            color: $secondary-color;
+            font-size: 1.2em; /* Kích thước chữ lớn hơn cho biểu tượng */
+            margin: 0 10px;
+        }
+    }
+}
+
+.login-form {
+    padding: 0 20px; /* Padding hai bên */
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity $transition-duration $transition-easing,
+        height $transition-duration $transition-easing,
+        padding $transition-duration $transition-easing;
+
+    /* Hiển thị form khi hover vào wrapper */
+    .login-wrapper:hover & {
+        opacity: 1;
+        height: auto; /* Chiều cao tự động dựa trên nội dung */
+        padding: 20px; /* Padding cho nội dung */
+    }
+}
+
+.input-group {
+    margin-bottom: 20px; /* Khoảng cách giữa các input lớn hơn */
+
+    input {
+        width: calc(100% - 24px);
+        padding: 12px;
+        border: none;
+        border-radius: $border-radius;
+        background-color: $input-background;
+        color: $text-color;
+        box-sizing: border-box;
+        font-size: 1em;
+        transition: background-color 0.3s ease; /* Thay đổi màu nền khi hover */
+
+        &:focus {
+            background-color: darken($input-background, 10%); /* Tối màu khi focus */
+            outline: none; /* Xóa outline mặc định */
+        }
+    }
+
+    input::placeholder {
+        color: $placeholder-color; /* Màu placeholder */
+    }
+}
+
+.sign-in-button {
+    background-color: $primary-color;
+    color: $background-color;
+    padding: 14px 25px;
+    border: none;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-size: 1.1em; /* Kích thước chữ nút */
+    font-weight: bold;
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi màu nền */
+
+    &:hover {
+        background-color: darken($primary-color, 15%); /* Tăng độ tối khi hover */
+    }
+}
+
+.links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em; /* Kích thước chữ nhỏ hơn */
+}
+
+.links a {
+    text-decoration: none;
+    color: $text-color;
+
+    &:first-child {
+        color: $placeholder-color; /* Màu cho liên kết quên mật khẩu */
+    }
+
+    &:last-child {
+        color: $secondary-color; /* Màu cho liên kết đăng ký */
+    }
+
+    &:hover {
+        text-decoration: underline; /* Gạch chân khi hover */
+        color: $secondary-color; /* Đổi màu khi hover */
+    }
+}
