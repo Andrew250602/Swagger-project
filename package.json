@@ -23,7 +23,7 @@
     "start": "concurrently \"nodemon server/index.js\" \"react-scripts start\"",
     "dev": "concurrently \"nodemon server/index.js\" \"react-scripts start\"",
     "build": "cd client && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "browserslist": {
     "production": [
