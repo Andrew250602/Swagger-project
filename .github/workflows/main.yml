@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  # Job cho Backend
+  # Job for Backend
   build-backend:
     runs-on: ubuntu-latest
     steps:
@@ -29,7 +29,7 @@ jobs:
         working-directory: server
         run: npm test
 
-  # Job cho Frontend
+  # Job for Frontend
   build-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +53,7 @@ jobs:
         working-directory: src
         run: npm run build
 
- # Job Deploy
+  # Job for Deployment
   deploy:
     runs-on: ubuntu-latest
     needs: [build-backend, build-frontend]
@@ -77,5 +77,5 @@ jobs:
   
       - name: Deploy to Heroku
         run: |
-          git remote add heroku https://git.heroku.com/YOUR_APP_NAME.git
-          git push heroku main
+          git remote add heroku https://git.heroku.com/your-actual-app-name.git
+          git push heroku main || { echo 'Deployment failed'; exit 1; }
