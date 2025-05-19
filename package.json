@@ -22,7 +22,7 @@
   "scripts": {
     "start": "concurrently \"nodemon server/index.js\" \"react-scripts start\"",
     "dev": "concurrently \"nodemon server/index.js\" \"react-scripts start\"",
-    "build": "cd client && npm run build",
+    "build": "npm run build",
     "test": "jest"
   },
   "browserslist": {
