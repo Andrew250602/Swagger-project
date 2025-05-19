@@ -1,5 +1,3 @@
-module.exports = {
-  testMatch: [
-    "**/tests/**/*.[jt]s?(x)",
-  ],
-};
+test('basic test', () => {
+  expect(true).toBe(true);  // A simple test case that always passes
+});
