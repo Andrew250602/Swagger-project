@@ -65,17 +65,3 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-  
-      - name: Install Heroku CLI
-        run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
-  
-      - name: Login to Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku auth:token
-  
-      - name: Deploy to Heroku
-        run: |
-          git remote add heroku https://git.heroku.com/your-actual-app-name.git
-          git push heroku main || { echo 'Deployment failed'; exit 1; }
