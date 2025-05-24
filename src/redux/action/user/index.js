@@ -1,16 +1,18 @@
 import { UserActionTypes } from "../../../constants/action/user";
+import { signInUrl } from "../../../constants/url";
+import { requestFetch } from "../../../ultil/request";
 
-export const fetchUsers = () => {
+export const submitFormAction = (data) => {
     return async (dispatch) => {
         dispatch({ type: UserActionTypes.FETCH_USERS_REQUEST });
 
         try {
-            const response = await fetch('https://jsonplaceholder.typicode.com/users');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            dispatch({ type: UserActionTypes.FETCH_USERS_SUCCESS, payload: data });
+            const responseData = await requestFetch(signInUrl, {
+                method: "POST",
+                body: JSON.stringify(data),
+            });
+
+            dispatch({ type: UserActionTypes.FETCH_USERS_SUCCESS, payload: responseData });
         } catch (error) {
             dispatch({ type: UserActionTypes.FETCH_USERS_FAILURE, error: error.message });
         }

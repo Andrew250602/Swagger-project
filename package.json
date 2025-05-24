@@ -8,6 +8,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
+    "antd": "^5.25.2",
     "bcrypt": "^6.0.0",
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",

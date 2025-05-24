@@ -104,7 +104,8 @@ class AuthorController {
     try {
       const findToken = await RefreshTokenRepository.findToken(req.body)
       const user = await RefreshTokenRepository.checkTokenStartExpiration(findToken)
-      if (!user.valid) {
+      if (user.valid) {
+        
         const generateToken = await RefreshTokenRepository.generateToken(user);
         const userResponse = new UserResponseDTO(user)
         userResponse.refreshToken = generateToken
@@ -122,8 +123,11 @@ class AuthorController {
             await RefreshTokenRepository.saveToken(userResponse);
           }
         }
+        return res.status(protocolConstants.SUCCESS).json({ response: userResponse, valid: user.valid })
+
+      } else {
+        return res.status(protocolConstants.SUCCESS).json({ response: user,valid: user.valid })
       }
-      return res.status(protocolConstants.SUCCESS).json({ user: user })
     }
     catch (error) {
       console.error(error);

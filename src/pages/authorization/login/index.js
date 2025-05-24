@@ -1,45 +1,52 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchUsers } from '../../../redux/action/user';
-import "../../../style/author/index.scss"
-const LoginComponent = (props) => {
-    const { fetchUsers, message, users, loading, error, displayMessage } = props;
+import { submitFormAction } from '../../../redux/action/user';
+import "../../../style/author/index.scss";
+import { Form, Input, Button } from 'antd';
 
-    useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
+const LoginComponent = (props) => {
+    const { submitFormDispatch, loading, error, message } = props;
+
+    const onFinish = (values) => {
+        submitFormDispatch(values);
+    };
 
     return (
-        <>
-            <div class="login-wrapper">
-                <div class="login-header">
-                    <h2>
-                        <span>▶</span> LOGIN <span>❤</span>
-                    </h2>
-                </div>
-                <div class="login-form">
-                    <div class="input-group">
-                        <input type="text" placeholder="Username" />
-                    </div>
-                    <div class="input-group">
-                        <input type="password" placeholder="Password" />
-                    </div>
-                    <button class="sign-in-button">Sign in</button>
-                    <div class="links">
-                        <a href="#">Forgot Password</a>
-                        <a href="#">Sign up</a>
-                    </div>
-                </div>
+        <div className="login-wrapper">
+            <div className="login-header">
+                <h2>LOGIN</h2>
             </div>
-
-        </>
+            <Form className="login-form" onFinish={onFinish}>
+                <Form.Item
+                    name="name"
+                    rules={[{ required: true, message: 'Please input your username!' }]}
+                >
+                    <Input placeholder="Name" />
+                </Form.Item>
+                <Form.Item
+                    name="passWord"
+                    rules={[{ required: true, message: 'Please input your password!' }]}
+                >
+                    <Input.Password placeholder="Password" />
+                </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                        Sign in
+                    </Button>
+                </Form.Item>
+                <div className="links">
+                    <a href="#">Forgot Password</a>
+                    <a href="#">Sign up</a>
+                </div>
+            </Form>
+            {error && <div className="error-message">{message}</div>}
+        </div>
     );
 };
 
-
 // Function to map dispatch to props
 const mapDispatchToProps = (dispatch) => ({
-    fetchUsers: () => dispatch(fetchUsers()),
+    submitFormDispatch: (values) => dispatch(submitFormAction(values)),
 });
 
 // Function to map state to props
@@ -54,18 +61,3 @@ const mapStateToProps = (state) => {
 
 // Connect the component to Redux
 export default connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
-
-
-// <div>
-//     <h1>Welcome to the Outlet!</h1>
-//     <p style={{ color: "red" }}>{message}</p>
-//     <button onClick={fetchUsers}>Click Me!</button>
-
-//     {loading && <p>Loading users...</p>}
-//     {error && <p style={{ color: "red" }}>Error: {error}</p>}
-//     <ul>
-//         {users && users.map(user => (
-//             <li key={user.id}>{user.name}</li>
-//         ))}
-//     </ul>
-// </div>

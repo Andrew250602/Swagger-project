@@ -75,7 +75,7 @@ body {
     margin-bottom: 20px; /* Khoảng cách giữa các input lớn hơn */
 
     input {
-        width: calc(100% - 24px);
+        width: calc(100%);
         padding: 12px;
         border: none;
         border-radius: $border-radius;
@@ -86,7 +86,7 @@ body {
         transition: background-color 0.3s ease; /* Thay đổi màu nền khi hover */
 
         &:focus {
-            background-color: darken($input-background, 10%); /* Tối màu khi focus */
+            // background-color: darken($input-background, 10%); /* Tối màu khi focus */
             outline: none; /* Xóa outline mặc định */
         }
     }
@@ -99,7 +99,7 @@ body {
 .sign-in-button {
     background-color: $primary-color;
     color: $background-color;
-    padding: 14px 25px;
+    padding: 7px 12px;
     border: none;
     border-radius: $border-radius;
     cursor: pointer;
