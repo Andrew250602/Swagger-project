@@ -1,7 +1,6 @@
 import { UserActionTypes } from "../../../constants/action/user";
-import { signInUrl } from "../../../constants/url";
-import { requestFetch } from "../../../ultil/request";
-
+import {requestFetch} from "../../../ultil/request/index"
+import {signInUrl} from "../../../constants/url/index"
 export const submitFormAction = (data) => {
     return async (dispatch) => {
         dispatch({ type: UserActionTypes.FETCH_USERS_REQUEST });
@@ -13,8 +12,14 @@ export const submitFormAction = (data) => {
             });
 
             dispatch({ type: UserActionTypes.FETCH_USERS_SUCCESS, payload: responseData });
+
         } catch (error) {
             dispatch({ type: UserActionTypes.FETCH_USERS_FAILURE, error: error.message });
         }
+    };
+};
+export const logoutAction = () => {
+    return {
+        type: UserActionTypes.LOGOUT,
     };
 };

@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "antd": "^5.25.2",
@@ -22,6 +23,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
+    "react-router-dom": "^7.6.0",
     "react-scripts": "^5.0.1",
     "redux": "^4.2.1",
     "redux-devtools-extension": "^2.13.9",

@@ -3,7 +3,7 @@ export const requestFetch = async (url, options = {}) => {
         'Content-Type': 'application/json',
     };
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
 
     if (token) {
         defaultHeaders['Authorization'] = `Bearer ${token}`;
