@@ -40,10 +40,10 @@ jobs:
 
       - name: Deploy to server
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/{{ secrets.DB_NAME }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          IDENTITY_FILE: ${{ secrets.IDENTITY_FILE }} # Nếu bạn sử dụng khóa SSH
+          DB_PORT_DB: ${{ secrets.DB_PORT_DB }}
         run: |
           ssh -i $IDENTITY_FILE ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
           cd /path/to/your/app
