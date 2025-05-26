@@ -45,7 +45,9 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_PORT_DB: ${{ secrets.DB_PORT_DB }}
         run: |
-          ssh -i $IDENTITY_FILE ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+          echo "${{ secrets.IDENTITY_FILE }}" | base64 --decode > id_rsa
+          chmod 600 id_rsa
+          ssh -i id_rsa ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
           cd /path/to/your/app
           git pull origin main
           cd server
@@ -53,5 +55,5 @@ jobs:
           cd ../src
           npm install
           npm run build
-          npm start # Hoặc lệnh để khởi động server
+          npm start
           EOF
