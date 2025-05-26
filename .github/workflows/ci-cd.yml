@@ -43,8 +43,9 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          IDENTITY_FILE: ${{ secrets.IDENTITY_FILE }} # Nếu bạn sử dụng khóa SSH
         run: |
-          ssh ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -i $IDENTITY_FILE ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
           cd /path/to/your/app
           git pull origin main
           cd server
