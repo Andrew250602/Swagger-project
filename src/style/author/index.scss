@@ -11,8 +11,9 @@ $transition-duration: 0.4s; /* Thời gian chuyển tiếp */
 $transition-easing: ease-in-out;
 
 body {
-    background-color: #000; /* Nền tối */
+    background-color: #5e5959; /* Nền tối */
     margin: 0;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -52,11 +52,13 @@ class AuthorController {
         return res.status(protocolConstants.UNAUTHORIZED).json({ error: errorConstants.INVALID_CREDENTIALS });
       }
 
-      const generateToken = await RefreshTokenRepository.generateToken(user);
+      const generateTokenAccessToken = await RefreshTokenRepository.generateAccessToken(user);
+      const generateTokenRefreshToken = await RefreshTokenRepository.createAndStoreRefreshToken(user);
       const foundMenu = await MenuRepository.foundMenu(user)
 
       const userResponse = new UserResponseDTO(user);
-      userResponse.accessToken = generateToken
+      userResponse.accessToken = generateTokenAccessToken
+      userResponse.refreshToken = generateTokenRefreshToken
       userResponse.menu = foundMenu
       const request = {
         usercode: user.code
@@ -106,7 +108,7 @@ class AuthorController {
       const user = await RefreshTokenRepository.checkTokenStartExpiration(findToken)
       if (user.valid) {
         
-        const generateToken = await RefreshTokenRepository.generateToken(user);
+        const generateToken = await RefreshTokenRepository.generateAccessToken(user);
         const userResponse = new UserResponseDTO(user)
         userResponse.refreshToken = generateToken
         userResponse.code = findToken.code

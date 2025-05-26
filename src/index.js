@@ -15,7 +15,7 @@ root.render(
       {/* Chọn một trong hai dòng dưới đây tùy theo phiên bản Ant Design của bạn */}
       {/* <ConfigProvider> */}
       <AntdApp> {/* Sử dụng App component từ Ant Design */}
-        <App />
+        <App/>
       </AntdApp>
       {/* </ConfigProvider> */}
     </Provider>

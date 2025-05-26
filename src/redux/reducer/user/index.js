@@ -4,24 +4,23 @@ const initialState = {
     loading: false,
     user: null,
     error: null,
-    // Kiểm tra localStorage ngay khi reducer được khởi tạo
-    isAuthenticated: !!localStorage.getItem('accessToken'), // true nếu có token, false nếu không
-    token: localStorage.getItem('accessToken'), // Lấy token từ localStorage
+    isAuthenticated: !!localStorage.getItem('accessToken'),
+    token: localStorage.getItem('accessToken'),
 };
 
-
 const userReducer = (state = initialState, action) => {
-       switch (action.type) {
+    switch (action.type) {
         case UserActionTypes.FETCH_USERS_REQUEST:
             return { ...state, loading: true, error: null };
 
         case UserActionTypes.FETCH_USERS_SUCCESS:
-            const { user } = action.payload; // Giả định payload có { user, token }
+            const { user } = action.payload;
             localStorage.setItem('accessToken', user.accessToken);
+            localStorage.setItem('refreshToken', user.refreshToken);
             return {
                 ...state,
                 loading: false,
-                user: user, // <-- Cập nhật user hiện tại
+                user,
                 isAuthenticated: true,
                 token: user.accessToken,
                 error: null,
@@ -29,22 +28,34 @@ const userReducer = (state = initialState, action) => {
 
         case UserActionTypes.FETCH_USERS_FAILURE:
             localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
             return {
                 ...state,
                 loading: false,
                 isAuthenticated: false,
                 token: null,
-                user: null, // Reset user khi đăng nhập thất bại
+                user: null,
                 error: action.error,
             };
 
         case UserActionTypes.LOGOUT:
             localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
             return {
                 ...state,
                 isAuthenticated: false,
                 user: null,
                 token: null,
+                error: null,
+            };
+
+        case UserActionTypes.UPDATE_TOKENS:
+            const { accessToken, refreshToken } = action.payload;
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            return {
+                ...state,
+                token: accessToken,
                 error: null,
             };
 

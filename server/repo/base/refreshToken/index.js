@@ -3,14 +3,19 @@ const pool = require("../../../connect/index");
 const errorConstants = require('../../../constants/errorConstants');
 require('dotenv').config();
 
-
 class RefreshTokenRepository {
-    async generateToken(user) {
-        const payload = { name: user.name };
-        const expiration = '30s';
-        const secret = process.env.JWT_SECRET_KEY;
 
-        const refreshToken = jwt.sign(payload, secret, { expiresIn: expiration });
+    async generateAccessToken(userPayload) {
+        const accessTokenPayload = { name: userPayload.name };
+        const secret = process.env.ACCESS_TOKEN_SECRET;
+        const accessToken = jwt.sign(accessTokenPayload, secret, { expiresIn: '30s' });
+        return accessToken;
+    }
+
+    async createAndStoreRefreshToken(userPayload) {
+        const refreshTokenPayload = { name: userPayload.name };
+        const secret = process.env.REFRESH_TOKEN_SECRET;
+        const refreshToken = jwt.sign(refreshTokenPayload, secret, { expiresIn: '30s' });
         return refreshToken;
     }
     async saveToken(data) {
@@ -68,7 +73,7 @@ class RefreshTokenRepository {
         } catch (error) {
             console.error(errorConstants.ERROR_REMOVING_REFRESH_TOKEN, error);
             return false;
-        } 
+        }
     }
     async checkTokenStartExpiration(data) {
         try {
