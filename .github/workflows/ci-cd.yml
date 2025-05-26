@@ -3,57 +3,77 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - main # Kích hoạt workflow khi có push lên nhánh 'main'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Chạy job trên môi trường Ubuntu mới nhất
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2 # Tải mã nguồn từ repository
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2 # Cài đặt Node.js
         with:
-          node-version: '14'
+          node-version: '14' # Hoặc phiên bản Node.js bạn đang dùng (ví dụ: '16', '18')
 
       - name: Install frontend dependencies
         run: |
-          cd src
-          npm install
+          cd src # Di chuyển vào thư mục frontend
+          npm install # Cài đặt các gói phụ thuộc của frontend
 
       - name: Build frontend
         run: |
           cd src
-          npm run build
+          npm run build # Build ứng dụng frontend (ví dụ: React, Vue, Angular)
 
       - name: Install backend dependencies
         run: |
-          cd server
-          npm install
+          cd server # Di chuyển vào thư mục backend
+          npm install # Cài đặt các gói phụ thuộc của backend
 
       - name: Run backend tests
         run: |
           cd server
-          npm test
+          npm test # Chạy các bài kiểm tra của backend
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3 # Action để thêm SSH private key vào SSH agent của runner
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }} # Sử dụng SSH private key từ GitHub Secrets
 
       - name: Deploy to server
         env:
-          DATABASE_URL: ${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/{{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_PORT_DB: ${{ secrets.DB_PORT_DB }}
+          # Các biến môi trường cho ứng dụng backend của bạn
+          # Lưu ý: Cú pháp URL database có thể khác tùy thuộc vào driver/ORM bạn dùng
+          DATABASE_URL: 'postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT_DB }}/${{ secrets.DB_NAME }}'
+          NODE_ENV: production # Đặt môi trường là production
+          # Thêm các biến môi trường khác nếu cần cho ứng dụng của bạn
+          # MY_API_KEY: ${{ secrets.MY_API_KEY }}
         run: |
-          echo "${{ secrets.IDENTITY_FILE }}" | base64 --decode > id_rsa
-          chmod 600 id_rsa
-          ssh -i id_rsa ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-          cd /path/to/your/app
-          git pull origin main
-          cd server
-          npm install
-          cd ../src
-          npm install
-          npm run build
-          npm start
+          # Kết nối SSH đến server và thực hiện các lệnh triển khai
+          # -o StrictHostKeyChecking=no bỏ qua kiểm tra host key, hữu ích cho CI/CD
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            # Di chuyển đến thư mục ứng dụng trên server
+            cd ${{ secrets.APP_PATH }}
+
+            # Kéo mã nguồn mới nhất từ GitHub
+            git pull origin main
+
+            # Cài đặt lại các gói phụ thuộc (nếu có thay đổi)
+            npm install --production # Chỉ cài đặt dependencies cần thiết cho production
+
+            # Nếu bạn có bước build frontend trên server (thay vì trên GitHub Actions)
+            # cd src && npm run build
+            # cd ../server # Trở về thư mục gốc của backend
+
+            # Khởi động lại ứng dụng (ví dụ sử dụng PM2)
+            # Đảm bảo PM2 đã được cài đặt và cấu hình trên server của bạn
+            pm2 restart ${{ secrets.PM2_APP_NAME }} || pm2 start npm --name "${{ secrets.PM2_APP_NAME }}" -- start # Start nếu chưa có, restart nếu đã có
+
+            # Hoặc nếu bạn dùng systemd, Docker, v.v.
+            # sudo systemctl restart your-app-service
+
+            echo "Deployment successful!"
           EOF
