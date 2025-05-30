@@ -17,6 +17,7 @@ const userReducer = (state = initialState, action) => {
             const { user } = action.payload;
             localStorage.setItem('accessToken', user.accessToken);
             localStorage.setItem('refreshToken', user.refreshToken);
+            localStorage.setItem('name', user.name)
             return {
                 ...state,
                 loading: false,
@@ -27,8 +28,6 @@ const userReducer = (state = initialState, action) => {
             };
 
         case UserActionTypes.FETCH_USERS_FAILURE:
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
             return {
                 ...state,
                 loading: false,
@@ -41,6 +40,7 @@ const userReducer = (state = initialState, action) => {
         case UserActionTypes.LOGOUT:
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
+            localStorage.removeItem('name');
             return {
                 ...state,
                 isAuthenticated: false,

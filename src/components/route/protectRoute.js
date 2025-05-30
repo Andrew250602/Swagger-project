@@ -1,18 +1,13 @@
-// src/components/Auth/ProtectedRoute.js
-import React from 'react';
-import { connect } from 'react-redux'; // Sử dụng connect nếu bạn thích
-import { Navigate } from 'react-router-dom';
-
-const ProtectedRoute = ({ children, isAuthenticated }) => {
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+const ProtectedRoute = ({ children }) => {
+  const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.userState.isAuthenticated);
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    navigate('/login', { replace: true });
   }
+
   return children;
 };
 
-// Kết nối ProtectedRoute với Redux state
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.userState.isAuthenticated, // Lấy isAuthenticated từ userState
-});
-
-export default connect(mapStateToProps)(ProtectedRoute);
+export default ProtectedRoute

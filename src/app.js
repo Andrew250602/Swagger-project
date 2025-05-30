@@ -1,7 +1,6 @@
 import LoginPage from "./pages/authorization/login";
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux'; // Vẫn dùng useSelector cho ProtectedRoute
+import { useSelector } from 'react-redux';
 import TabLayout from "./components/layout/layout";
 import DashboardPage from "./pages/private/dashboard";
 import ProfilePage from "./pages/private/profile";
@@ -13,21 +12,20 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route
-                    path="/"
-                    element={
-                        isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
-                    }
-                />
                 <Route path="/login" element={<LoginPage />} />
-
-                <Route element={<ProtectedRoute />}>
-                    <Route path="/" element={<TabLayout />}>
-                        <Route path="dashboard" element={<DashboardPage />} />
-                        <Route path="profile" element={<ProfilePage />} />
-                    </Route>
+                <Route path="/" element={<TabLayout />}>
+                    <Route index element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
+                    <Route path="dashboard" element={
+                        <ProtectedRoute>
+                            <DashboardPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="profile" element={
+                        <ProtectedRoute>
+                            <ProfilePage />
+                        </ProtectedRoute>
+                    } />
                 </Route>
-
                 <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             </Routes>
         </Router>

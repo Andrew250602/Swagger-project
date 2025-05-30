@@ -1,28 +1,27 @@
-import React, { useEffect } from 'react'; // Import useEffect
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { submitFormAction } from '../../../redux/action/user';
 import "../../../style/author/index.scss";
-import { Form, Input, Button, message as AntdMessage } from 'antd'; // Import message từ Ant Design
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Form, Input, Button, message as AntdMessage } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const LoginComponent = (props) => {
-    const { submitFormDispatch, loading, error, isAuthenticated } = props; // Lấy isAuthenticated từ props
-    const navigate = useNavigate(); // Khởi tạo hook useNavigate
+    const { submitFormDispatch, loading, error, isAuthenticated } = props;
+    const navigate = useNavigate();
 
     const onFinish = (values) => {
         submitFormDispatch(values);
     };
 
-    // Sử dụng useEffect để theo dõi trạng thái đăng nhập
     useEffect(() => {
         if (isAuthenticated) {
-            AntdMessage.success('Đăng nhập thành công!'); // Hiển thị thông báo thành công
-            navigate('/dashboard', { replace: true }); // Chuyển hướng đến trang dashboard
+            AntdMessage.success('Đăng nhập thành công!');
+            navigate('/dashboard', { replace: true });
         }
         if (error) {
-            AntdMessage.error(`Đăng nhập thất bại: ${error}`); // Hiển thị thông báo lỗi
+            AntdMessage.error(`Đăng nhập thất bại: ${error}`);
         }
-    }, [isAuthenticated, error, navigate]); // Dependencies: isAuthenticated, error, navigate
+    }, [isAuthenticated, error, navigate]);
 
     return (
         <div className="login-wrapper">

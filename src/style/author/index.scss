@@ -17,9 +17,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Chiều cao tối thiểu */
 }
-
+#root{
+    width: 100%;
+    height: 100%;
+}
 .login-wrapper {
     background-color: $background-color;
     border-radius: $border-radius;

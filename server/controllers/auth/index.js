@@ -79,12 +79,19 @@ class AuthorController {
   }
   async signOut(req, res) {
     try {
-      const { name } = req.body
+      const { name, passWord } = req.body
       const user = await UserRepository.isReturnUser(name);
 
       if (!user) {
         return res.status(protocolConstants.UNAUTHORIZED).json({ error: errorConstants.USER_IS_NOT_EXISTED });
       }
+      const isPasswordMatch = await bcrypt.compare(passWord, user.password);
+
+      if (!isPasswordMatch) {
+        return res.status(protocolConstants.UNAUTHORIZED).json({ error: errorConstants.INVALID_CREDENTIALS });
+      }
+
+
       await RefreshTokenRepository.removeToken(user);
       return res.status(protocolConstants.SUCCESS).json({ user: user })
     }
@@ -107,7 +114,7 @@ class AuthorController {
       const findToken = await RefreshTokenRepository.findToken(req.body)
       const user = await RefreshTokenRepository.checkTokenStartExpiration(findToken)
       if (user.valid) {
-        
+
         const generateToken = await RefreshTokenRepository.generateAccessToken(user);
         const userResponse = new UserResponseDTO(user)
         userResponse.refreshToken = generateToken
@@ -128,7 +135,7 @@ class AuthorController {
         return res.status(protocolConstants.SUCCESS).json({ response: userResponse, valid: user.valid })
 
       } else {
-        return res.status(protocolConstants.SUCCESS).json({ response: user,valid: user.valid })
+        return res.status(protocolConstants.SUCCESS).json({ response: user, valid: user.valid })
       }
     }
     catch (error) {

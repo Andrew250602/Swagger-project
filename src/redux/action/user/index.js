@@ -1,6 +1,6 @@
 import { UserActionTypes } from "../../../constants/action/user";
 import { requestFetch } from "../../../ultil/request/index";
-import { signInUrl, startRefreshTokenUrl } from "../../../constants/url/index";
+import { signInUrl, signOutUrl, startRefreshTokenUrl } from "../../../constants/url/index";
 
 export const submitFormAction = (data) => {
     return async (dispatch) => {
@@ -47,8 +47,19 @@ export const refreshAccessTokenAction = (refreshToken) => {
     };
 };
 
-export const logoutAction = () => {
-    return {
-        type: UserActionTypes.LOGOUT,
+export const logoutAction = (data) => {
+    return async (dispatch) => {
+        dispatch({ type: UserActionTypes.FETCH_USERS_REQUEST });
+        try {
+            await requestFetch(signOutUrl, {
+                method: "POST",
+                body: JSON.stringify(data),
+            });
+            dispatch({
+                type: UserActionTypes.LOGOUT
+            })
+        } catch (error) {
+            dispatch({ type: UserActionTypes.FETCH_USERS_FAILURE, error: error.message });
+        }
     };
 };
